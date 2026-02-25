@@ -1,0 +1,17 @@
+Wind Rotor Performance Hybrid Analysis Report
+
+ML Model Performance:
+RMSE: 3178241.6212
+MAE: 1529484.5631
+R2 Score: 0.9677
+
+Physics Model Performance:
+RMSE: 2417205.9959
+MAE: 1204218.3473
+R2 Score: 0.9832
+
+ML Improvement over Physics (RMSE Reduction): -31.48%
+
+Cross Validation Results:
+CV Mean R2: 0.9730
+CV Std R2: 0.0070

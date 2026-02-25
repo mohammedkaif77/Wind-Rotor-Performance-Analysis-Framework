@@ -1,0 +1,5 @@
+Wind Turbine AI Validation Report
+----------------------------------
+Total Samples: 200
+RMSE: 3415.42
+R2 Score: 0.9163
