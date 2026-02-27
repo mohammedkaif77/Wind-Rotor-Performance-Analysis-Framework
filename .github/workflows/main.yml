@@ -1,0 +1,48 @@
+name: Wind Rotor ML Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ml_pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 3️⃣ Install dependencies
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4️⃣ Generate Wind Dataset
+      - name: Generate Dataset
+        run: |
+          python -c "from src.data_generator import generate_wind_dataset; generate_wind_dataset()"
+
+      # 5️⃣ Run Full Framework (Physics + ML + Reporting)
+      - name: Run Main Framework
+        run: |
+          python main.py
+
+      # 6️⃣ Upload Reports as Artifacts
+      - name: Upload Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: wind-rotor-reports
+          path: reports/
