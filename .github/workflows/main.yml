@@ -13,39 +13,35 @@ jobs:
 
     steps:
 
-      # 1️⃣ Checkout Repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2️⃣ Setup Python
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
-      # 3️⃣ Install Dependencies
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ Run Linting (Code Quality Check)
+      # ✅ ADD THIS STEP (IMPORTANT FIX)
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
+
       - name: Run Linting
         run: flake8 src/ || true
 
-      # 5️⃣ Run Unit Tests
       - name: Run Tests
         run: pytest
 
-      # 6️⃣ Generate Dataset
       - name: Generate Dataset
         run: python -c "from src.data_generator import generate_wind_dataset; generate_wind_dataset()"
 
-      # 7️⃣ Train & Evaluate Model (Includes Performance Gate)
       - name: Train & Evaluate Model
         run: python main.py
 
-      # 8️⃣ Upload Artifacts (Reports + Model + Data)
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
