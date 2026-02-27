@@ -10,16 +10,15 @@ def generate_wind_dataset(samples=1000):
 
     np.random.seed(42)
 
-    wind_speed = np.random.uniform(3, 25, samples)  # m/s
-    air_density = np.random.uniform(1.1, 1.3, samples)  # kg/m^3
-    rotor_radius = np.random.uniform(20, 60, samples)  # meters
-    temperature = np.random.uniform(-10, 40, samples)  # °C
+    wind_speed = np.random.uniform(3, 25, samples)
+    air_density = np.random.uniform(1.1, 1.3, samples)
+    rotor_radius = np.random.uniform(20, 60, samples)
+    temperature = np.random.uniform(-10, 40, samples)
 
     # Physics-based power calculation
     area = np.pi * rotor_radius**2
     theoretical_power = 0.5 * air_density * area * wind_speed**3
 
-    # Add real-world noise (turbulence, inefficiency)
     noise = np.random.normal(0, theoretical_power * 0.1)
     power_output = theoretical_power + noise
 
@@ -35,3 +34,5 @@ def generate_wind_dataset(samples=1000):
     df.to_csv("data/wind_data.csv", index=False)
 
     print("Synthetic wind dataset generated successfully.")
+
+    return df   # ✅ THIS LINE IS CRITICAL
