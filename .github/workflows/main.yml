@@ -1,66 +1,52 @@
-import os
-import numpy as np
-import pandas as pd
+name: Wind Rotor ML Engineering Pipeline
 
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, r2_score
-import joblib
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
-from src.data_generator import generate_wind_dataset
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-def main():
-    print("Starting Wind Rotor ML Pipeline...")
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
 
-    # 1️⃣ Generate Dataset
-    generate_wind_dataset()
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    # 2️⃣ Load Dataset
-    data_path = "data/wind_data.csv"
-    df = pd.read_csv(data_path)
+      - name: Set PYTHONPATH
+        run: echo "PYTHONPATH=${{ github.workspace }}" >> $GITHUB_ENV
 
-    X = df.drop("power_output", axis=1)
-    y = df["power_output"]
+      - name: Run Linting
+        run: flake8 src/ || true
 
-    # 3️⃣ Train/Test Split
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
+      - name: Run Tests
+        run: pytest
 
-    # 4️⃣ Train Model
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
+      - name: Generate Dataset
+        run: python -c "from src.data_generator import generate_wind_dataset; generate_wind_dataset()"
 
-    # 5️⃣ Predictions
-    y_pred = model.predict(X_test)
+      - name: Train & Evaluate Model
+        run: python main.py
 
-    # 6️⃣ Evaluation (Version-Safe RMSE)
-    mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
-    r2 = r2_score(y_test, y_pred)
-
-    print(f"RMSE: {rmse:.4f}")
-    print(f"R2 Score: {r2:.4f}")
-
-    # 7️⃣ Performance Gate (CI/CD Quality Check)
-    if r2 < 0.75:
-        raise ValueError("Model performance below acceptable threshold!")
-
-    # 8️⃣ Save Model
-    os.makedirs("models", exist_ok=True)
-    joblib.dump(model, "models/wind_model.pkl")
-
-    # 9️⃣ Save Report
-    os.makedirs("reports", exist_ok=True)
-    with open("reports/model_report.txt", "w") as f:
-        f.write("Wind Rotor Model Performance Report\n")
-        f.write("-----------------------------------\n")
-        f.write(f"RMSE: {rmse:.4f}\n")
-        f.write(f"R2 Score: {r2:.4f}\n")
-
-    print("Pipeline completed successfully.")
-
-
-if __name__ == "__main__":
-    main()
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wind-rotor-artifacts
+          path: |
+            reports/
+            data/
+            models/
