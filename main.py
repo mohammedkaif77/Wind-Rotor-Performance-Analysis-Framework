@@ -1,65 +1,51 @@
 import os
-import numpy as np
-import pandas as pd
-
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, r2_score
 import joblib
-
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error
 from src.data_generator import generate_wind_dataset
 
 
 def main():
-    print("Starting Wind Rotor ML Pipeline...")
 
-    # 1️⃣ Generate Dataset
-    generate_wind_dataset()
+    # Ensure reports directory exists
+    os.makedirs("reports", exist_ok=True)
 
-    # 2️⃣ Load Dataset
-    data_path = "data/wind_data.csv"
-    df = pd.read_csv(data_path)
+    # Generate dataset
+    df = generate_wind_dataset()
 
-    X = df.drop("power_output", axis=1)
+    # Features & Target
+    X = df[["wind_speed", "air_density", "rotor_radius", "temperature"]]
     y = df["power_output"]
 
-    # 3️⃣ Train/Test Split
+    # Train/Test Split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
-    # 4️⃣ Train Model
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    # Train Model
+    model = RandomForestRegressor(random_state=42)
     model.fit(X_train, y_train)
 
-    # 5️⃣ Predictions
+    # Predictions
     y_pred = model.predict(X_test)
 
-    # 6️⃣ Version-Safe RMSE Calculation
-    mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
+    # Evaluation
     r2 = r2_score(y_test, y_pred)
+    rmse = mean_squared_error(y_test, y_pred, squared=False)
 
-    print(f"RMSE: {rmse:.4f}")
-    print(f"R2 Score: {r2:.4f}")
+    print(f"R2 Score: {r2}")
+    print(f"RMSE: {rmse}")
 
-    # 7️⃣ Performance Gate
-    if r2 < 0.75:
-        raise ValueError("Model performance below acceptable threshold!")
+    # 🚨 Performance Gate
+    if r2 < 0.95:
+        raise ValueError("Model performance below acceptable threshold (0.95)")
 
-    # 8️⃣ Save Model
-    os.makedirs("models", exist_ok=True)
-    joblib.dump(model, "models/wind_model.pkl")
+    # Save Model
+    joblib.dump(model, "reports/model.pkl")
 
-    # 9️⃣ Save Report
-    os.makedirs("reports", exist_ok=True)
-    with open("reports/model_report.txt", "w") as f:
-        f.write("Wind Rotor Model Performance Report\n")
-        f.write("-----------------------------------\n")
-        f.write(f"RMSE: {rmse:.4f}\n")
-        f.write(f"R2 Score: {r2:.4f}\n")
-
-    print("Pipeline completed successfully.")
+    print("Model saved successfully.")
 
 
 if __name__ == "__main__":
