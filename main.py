@@ -33,7 +33,7 @@ def main():
 
     # Evaluation
     r2 = r2_score(y_test, y_pred)
-    rmse = mean_squared_error(y_test, y_pred, squared=False)
+    rmse = mean_squared_error(y_test, y_pred) ** 0.5  # Manually compute RMSE
 
     print(f"R2 Score: {r2}")
     print(f"RMSE: {rmse}")
