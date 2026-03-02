@@ -1,160 +1,155 @@
-# Wind Rotor Performance Analysis Framework  
 
-An AI-driven aerodynamic performance analysis framework integrating physics-based rotor modeling with machine learning regression for automated wind turbine power prediction and validation.
+# 🌬️ Wind Rotor Performance Analysis Framework
 
----
-
-## 📌 Project Overview
-
-This project simulates and evaluates wind turbine rotor performance using:
-
-- Classical aerodynamic power equation  
-- Machine Learning regression (Random Forest)  
-- Cross-validation workflow  
-- Automated reporting and visualization  
-
-The objective is to demonstrate how AI can complement traditional engineering models in wind energy systems.
+An end-to-end Machine Learning engineering project for analyzing and predicting wind turbine rotor performance using synthetic wind datasets and automated CI/CD pipelines.
 
 ---
 
-## ⚙️ Methodology
+## 🚀 Project Overview
 
-### 1️⃣ Physics-Based Modeling
+The **Wind Rotor Performance Analysis Framework** simulates wind behavior, trains predictive machine learning models, and validates performance automatically through a structured CI/CD workflow.
 
-Theoretical wind power is calculated using the aerodynamic power equation:
+This project demonstrates:
 
-P = 0.5 × ρ × A × V³
+- Synthetic wind dataset generation
+- Physics-inspired feature modeling
+- Machine Learning regression training
+- Performance evaluation (RMSE, R²)
+- Automated validation using GitHub Actions
+- Artifact generation and reporting
 
-Where:
-- ρ = Air density  
-- A = Rotor swept area  
-- V = Wind speed  
-
-This represents the baseline rotor performance model.
-
----
-
-### 2️⃣ Machine Learning Modeling
-
-A Random Forest Regressor is trained on wind system features:
-
-- Wind speed  
-- Air density  
-- Rotor radius  
-- Temperature  
-
-The ML model predicts rotor power output and is evaluated using:
-
-- RMSE  
-- MAE  
-- R² Score  
+It follows clean project structuring and foundational MLOps principles.
 
 ---
 
-### 3️⃣ Hybrid Performance Comparison
+## 🏗️ Architecture
 
-The framework compares:
+Developer → GitHub Repository → GitHub Actions → Artifacts & Reports
 
-- Physics-only model  
-- ML-based model  
+### 🔄 CI/CD Pipeline Stages
 
-Results include:
+On every push to the `main` branch:
 
-- Performance metrics  
-- Cross-validation stability  
-- RMSE improvement percentage  
+1. Setup Python environment  
+2. Install dependencies  
+3. Generate synthetic dataset  
+4. Train ML model  
+5. Evaluate performance  
+6. Save model artifact  
+7. Upload reports  
 
-This demonstrates how AI can enhance traditional aerodynamic analysis workflows.
-
----
-
-## 📊 Sample Results
-
-| Model      | R² Score | RMSE |
-|------------|----------|------|
-| Physics    | 0.9832   | 2.41M |
-| ML Model   | 0.9677   | 3.17M |
-
-Cross Validation Mean R²: 0.9730  
-Cross Validation Std: 0.0070  
-
-Interpretation:  
-Physics model outperforms ML on synthetic physics-generated data.  
-In real-world turbine systems, ML can model residual nonlinearities beyond simplified aerodynamic equations.
-
----
-
-## 🧠 Engineering Features
-
-✔ Modular architecture (separation of data, modeling, validation)  
-✔ Automated evaluation pipeline  
-✔ Cross-validation workflow  
-✔ Residual diagnostics visualization  
-✔ Hybrid physics vs AI comparison  
-✔ Report generation  
+This ensures reproducibility and continuous validation.
 
 ---
 
 ## 📂 Project Structure
 
 ```
-wind_rotor_performance_framework/
+
+Wind-Rotor-Performance-Analysis-Framework/
 │
-├── src/
-│   ├── data_loader.py
-│   ├── preprocessing.py
-│   ├── physics_model.py
-│   ├── ml_model.py
-│   ├── evaluation.py
-│   ├── validation.py
-│   ├── visualization.py
-│   ├── automation.py
-│   ├── data_generator.py
+├── .github/
+│   └── workflows/
+│       └── main.yml          # CI/CD configuration
 │
-├── data/
-├── reports/
-├── main.py
+├── data/                     # Generated wind datasets
+├── reports/                  # Model outputs & evaluation reports
+├── src/                      # Core ML and data logic
+├── tests/                    # Unit tests
+│
+├── main.py                   # Pipeline entry point
+├── requirements.txt          # Project dependencies
 └── README.md
+
+````
+
+---
+
+## ⚙️ Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/mohammedkaif77/Wind-Rotor-Performance-Analysis-Framework.git
+cd Wind-Rotor-Performance-Analysis-Framework
+````
+
+Create virtual environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate     # Linux/Mac
+venv\Scripts\activate        # Windows
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
 ```
 
 ---
 
-## 🚀 How To Run
-
-1. Activate virtual environment  
-
-2. Generate dataset  
-
-```bash
-python -c "from src.data_generator import generate_wind_dataset; generate_wind_dataset()"
-```
-
-3. Run framework  
+## ▶️ Run the Pipeline
 
 ```bash
 python main.py
 ```
 
-Reports and visualizations will be saved in the `reports/` folder.
+This will:
+
+* Generate synthetic wind dataset
+* Train regression model
+* Evaluate performance
+* Save trained model
+* Generate reports
 
 ---
 
-## 🔬 Future Improvements
+## 📊 Model Evaluation
 
-- Integration with real turbine SCADA datasets  
-- Blade pitch angle modeling  
-- Tip-speed ratio (TSR) analysis  
-- Power coefficient (Cp) modeling  
-- Deep learning-based residual correction  
-- Integration with CFD simulation outputs  
+Metrics used:
+
+* Root Mean Squared Error (RMSE)
+* R² Score
+
+These metrics validate prediction accuracy for wind power estimation.
 
 ---
 
-## 🎯 Learning Outcomes
+## 🛠 Tech Stack
 
-This project demonstrates:
+* Python
+* NumPy
+* Pandas
+* Scikit-learn
+* GitHub Actions (CI/CD)
 
-- Application of AI in renewable energy systems  
-- Integration of data-driven models with physics-based equations  
-- Design of scalable engineering automation frameworks  
-- Validation and robustness analysis in regression systems  #
+---
+
+## 🎯 Engineering Highlights
+
+* Modular project structure
+* Automated ML validation via CI/CD
+* Reproducible training pipeline
+* Artifact packaging and upload
+* Separation of data, logic, and testing
+
+---
+
+## 🚀 Future Improvements
+
+* FastAPI inference API
+* Docker containerization
+* Cloud deployment (AWS / GCP)
+* Model versioning
+* Monitoring integration
+
+---
+
+## 👨‍💻 Author
+
+Mohammed Kaif
+Aspiring Machine Learning Engineer
+Building reproducible ML systems with CI/CD practices
+
